@@ -14,7 +14,13 @@
     const revealObs = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
     }, { threshold: 0.1 });
-    revealEls.forEach(el => revealObs.observe(el));
+    revealEls.forEach(el => {
+      revealObs.observe(el);
+      // Immediately reveal if already in viewport
+      if (el.getBoundingClientRect().top < window.innerHeight) {
+        el.classList.add('visible');
+      }
+    });
 
     // ── SLIDESHOW ──
     const track = document.getElementById('slidesTrack');
