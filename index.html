@@ -4,8 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>µLearn GEC Kozhikode – Official Website</title>
-  <link rel="stylesheet" href="assets/styles.css">
-
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Year Filter Tab Styling to match your website's purple cyber aesthetic */
+    .year-filter-tabs {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0 35px 0;
+    }
+    .year-tab-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      background: var(--glass);
+      color: var(--text-muted);
+      border: 1px solid var(--border-soft);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+    .year-tab-btn:hover {
+      border-color: var(--purple-light);
+      color: var(--text);
+    }
+    .year-tab-btn.active {
+      background: var(--purple-mid);
+      color: var(--white);
+      border-color: var(--purple-mid);
+      box-shadow: 0 0 15px rgba(123,47,247,0.3);
+    }
+  </style>
 </head>
 <body>
 
@@ -87,117 +117,16 @@
       <div class="section-eyebrow reveal">What We Do</div>
       <h2 class="section-heading reveal">Our <span class="accent">Events</span></h2>
 
+      <div class="year-filter-tabs reveal">
+        <button class="year-tab-btn active" onclick="filterEventsByYear('2026', this)">Campaigns 2026</button>
+        <button class="year-tab-btn" onclick="filterEventsByYear('2025', this)">Archives 2025</button>
+      </div>
+
       <div class="slideshow-wrap reveal" style="transition-delay:0.1s">
         <div class="slides-track" id="slidesTrack">
-
-          <div class="slide active">
-            <div class="slide-img-wrap">
-              <img class="slide-img" src="Images/web.jpeg" alt="Accessibility Workshop">
-            </div>
-            <div class="slide-content">
-              <div class="slide-index">01 / 06</div>
-              <div class="slide-cat">Workshop</div>
-              <div class="slide-name">Web Accessibility Workshop</div>
-              <div class="slide-desc">Championing inclusive design — empowering students to build digital products accessible to everyone, everywhere.</div>
-              <div class="slide-controls">
-                <button class="slide-btn" id="prevBtn" aria-label="Previous">&#8592;</button>
-                <button class="slide-btn" id="nextBtn" aria-label="Next">&#8594;</button>
-                <div class="slide-dots" id="slideDots"></div>
-                <span class="slide-counter" id="slideCounter">1 / 6</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="slide">
-            <div class="slide-img-wrap">
-              <img class="slide-img" src="Images/git.jpeg" alt="Git & GitHub Workshop">
-            </div>
-            <div class="slide-content">
-              <div class="slide-index">02 / 06</div>
-              <div class="slide-cat">Workshop</div>
-              <div class="slide-name">Git & GitHub Workshop</div>
-              <div class="slide-desc">Hands-on introduction to version control, collaborative coding workflows, and open-source contribution for real-world projects.</div>
-              <div class="slide-controls">
-                <button class="slide-btn s-prev" aria-label="Previous">&#8592;</button>
-                <button class="slide-btn s-next" aria-label="Next">&#8594;</button>
-                <div class="slide-dots s-dots"></div>
-                <span class="slide-counter s-counter">2 / 6</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="slide">
-            <div class="slide-img-wrap">
-              <img class="slide-img" src="Images/mupulse.jpeg" alt="MuPulse">
-            </div>
-            <div class="slide-content">
-              <div class="slide-index">03 / 06</div>
-              <div class="slide-cat">Community Initiative</div>
-              <div class="slide-name">MuPulse</div>
-              <div class="slide-desc">Our community heartbeat event — celebrating milestones, sharing stories, and amplifying the spirit of µLearn across the campus.</div>
-              <div class="slide-controls">
-                <button class="slide-btn s-prev" aria-label="Previous">&#8592;</button>
-                <button class="slide-btn s-next" aria-label="Next">&#8594;</button>
-                <div class="slide-dots s-dots"></div>
-                <span class="slide-counter s-counter">3 / 6</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="slide">
-            <div class="slide-img-wrap">
-              <img class="slide-img" src="Images/padayottam.jpeg" alt="Padayottam">
-            </div>
-            <div class="slide-content">
-              <div class="slide-index">04 / 06</div>
-              <div class="slide-cat">Community Drive</div>
-              <div class="slide-name">Padayottam</div>
-              <div class="slide-desc">A community march initiative bringing students together to promote fitness, solidarity, and a strong sense of well-being on campus.</div>
-              <div class="slide-controls">
-                <button class="slide-btn s-prev" aria-label="Previous">&#8592;</button>
-                <button class="slide-btn s-next" aria-label="Next">&#8594;</button>
-                <div class="slide-dots s-dots"></div>
-                <span class="slide-counter s-counter">4 / 6</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="slide">
-            <div class="slide-img-wrap">
-              <img class="slide-img" src="Images/upside.jpeg" alt="Upside Down">
-            </div>
-            <div class="slide-content">
-              <div class="slide-index">05 / 06</div>
-              <div class="slide-cat">Creative Event</div>
-              <div class="slide-name">Upside Down</div>
-              <div class="slide-desc">An unconventional thinking event challenging participants to flip perspectives, break assumptions, and innovate from a fresh lens.</div>
-              <div class="slide-controls">
-                <button class="slide-btn s-prev" aria-label="Previous">&#8592;</button>
-                <button class="slide-btn s-next" aria-label="Next">&#8594;</button>
-                <div class="slide-dots s-dots"></div>
-                <span class="slide-counter s-counter">5 / 6</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="slide">
-            <div class="slide-img-wrap">
-              <img class="slide-img" src="Images/india.jpeg" alt="Code for India Hackathon">
-            </div>
-            <div class="slide-content">
-              <div class="slide-index">06 / 06</div>
-              <div class="slide-cat">Hackathon</div>
-              <div class="slide-name">Code for India Hackathon</div>
-              <div class="slide-desc">A national-level hackathon where students build impactful tech solutions for real civic and social challenges across India.</div>
-              <div class="slide-controls">
-                <button class="slide-btn s-prev" aria-label="Previous">&#8592;</button>
-                <button class="slide-btn s-next" aria-label="Next">&#8594;</button>
-                <div class="slide-dots s-dots"></div>
-                <span class="slide-counter s-counter">6 / 6</span>
-              </div>
-            </div>
-          </div>
-
+          <p id="event-loading-msg" style="text-align: center; color: rgba(255,255,255,0.4); padding: 60px; width: 100%; font-family: 'Space Mono', monospace; font-size: 0.9rem;">
+            Synchronizing with µLearn database operations matrix...
+          </p>
         </div>
       </div>
     </div>
@@ -253,7 +182,7 @@
       <div class="team-grid">
         <div class="team-card reveal">
           <div class="team-photo-wrap">
-            <img class="team-photo" src="Images/bindima.jpeg" alt="Dr. Bindima" onerror="this.parentElement.innerHTML='<div class=team-photo-placeholder>👩‍🏫</div>'">
+            <img class="team-photo" src="bindima.jpeg" alt="Dr. Bindima" onerror="this.parentElement.innerHTML='<div class=team-photo-placeholder>👩‍🏫</div>'">
           </div>
           <div class="team-info">
             <div class="team-name">Dr. Bindima</div>
@@ -262,7 +191,7 @@
         </div>
         <div class="team-card reveal" style="transition-delay:0.1s">
           <div class="team-photo-wrap">
-            <img class="team-photo" src="Images/naem.jpeg" alt="Naeem Ahammed" onerror="this.parentElement.innerHTML='<div class=team-photo-placeholder>👨‍💻</div>'">
+            <img class="team-photo" src="naem.jpeg" alt="Naeem Ahammed" onerror="this.parentElement.innerHTML='<div class=team-photo-placeholder>👨‍💻</div>'">
           </div>
           <div class="team-info">
             <div class="team-name">Naeem Ahammed</div>
@@ -271,7 +200,7 @@
         </div>
         <div class="team-card reveal" style="transition-delay:0.2s">
           <div class="team-photo-wrap">
-            <img class="team-photo" src="Images/neha.jpeg" alt="Neha T K" onerror="this.parentElement.innerHTML='<div class=team-photo-placeholder>👩‍💻</div>'">
+            <img class="team-photo" src="neha.jpeg" alt="Neha T K" onerror="this.parentElement.innerHTML='<div class=team-photo-placeholder>👩‍💻</div>'">
           </div>
           <div class="team-info">
             <div class="team-name">Neha T K</div>
@@ -280,7 +209,7 @@
         </div>
         <div class="team-card reveal" style="transition-delay:0.3s">
           <div class="team-photo-wrap">
-            <img class="team-photo" src="Images/vimal.jpeg" alt="Vimal John M V" onerror="this.parentElement.innerHTML='<div class=team-photo-placeholder>👨‍🎓</div>'">
+            <img class="team-photo" src="vimal.jpeg" alt="Vimal John M V" onerror="this.parentElement.innerHTML='<div class=team-photo-placeholder>👨‍🎓</div>'">
           </div>
           <div class="team-info">
             <div class="team-name">Vimal John M V</div>
@@ -342,6 +271,189 @@
       Web Administrator: Nandana K
     </div>
   </footer>
-  <script src="assets/scripts.js"></script>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkkzGS8mEcLY0qJiwbIPaNBaRO2hbm0Dz-mVj1d4wJdqrTZWrVLJo9F7xFTNqnbP87Lg/exec';
+    const track = document.getElementById('slidesTrack');
+    
+    // Master data arrays for multi-year scope management
+    let allEventsCached = [];
+    let activeYearFilter = '2026';
+
+    function getDirectDriveImageUrl(url) {
+      if (!url) return '';
+      const trimmed = url.trim();
+      if (!trimmed.includes('drive.google.com')) return trimmed;
+      const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9-_]+)/) || trimmed.match(/id=([a-zA-Z0-9-_]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/thumbnail?sz=w1200&id=${match[1]}`;
+      }
+      return trimmed;
+    }
+
+    // Network ingestion pipeline
+    fetch(SCRIPT_URL)
+      .then(res => res.json())
+      .then(data => {
+        allEventsCached = data || [];
+        // Render the default tab (2026) immediately upon successful download
+        renderFilteredCarousel();
+      })
+      .catch(err => {
+        console.error("Fetch failure:", err);
+        track.innerHTML = `<p style="text-align:center; color:#ff5252; width:100%; padding:40px;">Failed to synchronize live event cards.</p>`;
+      });
+
+    // Filtering handler linked directly to sub-tab button elements
+    function filterEventsByYear(year, buttonElement) {
+      activeYearFilter = year;
+      
+      // Update visual active styling across tab buttons
+      document.querySelectorAll('.year-tab-btn').forEach(btn => btn.classList.remove('active'));
+      buttonElement.classList.add('active');
+      
+      renderFilteredCarousel();
+    }
+
+    function renderFilteredCarousel() {
+      // Filter array on the fly based on whether the date string contains '2025' or '2026'
+      const filteredData = allEventsCached.filter(event => {
+        const eventDateStr = String(event.date || '');
+        return eventDateStr.includes(activeYearFilter);
+      });
+
+      if(filteredData.length === 0) {
+        track.innerHTML = `<p style="text-align:center; color:rgba(255,255,255,0.5); width:100%; padding:60px; font-family:'Space Mono', monospace; font-size:0.9rem;">No entries found for the year ${activeYearFilter}.</p>`;
+        return;
+      }
+
+      track.innerHTML = '';
+      const totalSlides = filteredData.length;
+
+      filteredData.forEach((event, index) => {
+        const slideNum = index + 1;
+        const padIndex = String(slideNum).padStart(2, '0');
+        const padTotal = String(totalSlides).padStart(2, '0');
+        
+        const assetImg = getDirectDriveImageUrl(event.imageurl || event.image);
+        const encodedName = encodeURIComponent(event.name);
+        const encodedCat = encodeURIComponent(event.category);
+
+        // Real-time date boundary checking loop logic
+        let isExpired = false;
+        if (event.deadline) {
+          const deadlineDate = new Date(event.deadline);
+          const currentDate = new Date();
+          if (!isNaN(deadlineDate.getTime()) && currentDate > deadlineDate) {
+            isExpired = true;
+          }
+        }
+
+        const actionButtonHTML = isExpired 
+          ? `<button class="register-btn" disabled style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-color: var(--border-soft); cursor: not-allowed; transform: none; box-shadow: none;">Closed</button>`
+          : `<button class="register-btn" onclick="window.location.href='register.html?name=${encodedName}&cat=${encodedCat}'">Register</button>`;
+
+        const slideHTML = `
+          <div class="slide ${index === 0 ? 'active' : ''}" data-slide-idx="${index}">
+            <div class="slide-img-wrap">
+              <img class="slide-img" src="${assetImg}" alt="${event.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="slide-placeholder" style="display:none; width:100%; height:100%; background:var(--bg-3); align-items:center; justify-content:center; font-size:4rem;">🌌</div>
+            </div>
+            <div class="slide-content">
+              <div class="slide-index">${padIndex} / ${padTotal}</div>
+              <div class="slide-cat">${event.category}</div>
+              <div class="slide-name">${event.name}</div>
+              <div class="slide-desc">
+                ${event.description}
+                <br><br>
+                <span style="color: var(--lavender); font-family: 'Space Mono', monospace; font-size: 0.8rem; display: block; margin-bottom: 5px;">
+                  📅 Date: ${event.date} | 🪙 Cost: ${event.price}
+                </span>
+              </div>
+              <div class="slide-controls">
+                <button class="slide-btn global-prev-trigger" id="prevBtn" aria-label="Previous">&#8592;</button>
+                <button class="slide-btn global-next-trigger" id="nextBtn" aria-label="Next">&#8594;</button>
+                <div class="slide-dots"></div>
+                <span class="slide-counter">${slideNum} / ${totalSlides}</span>
+                ${actionButtonHTML}
+              </div>
+            </div>
+          </div>
+        `;
+        track.innerHTML += slideHTML;
+      });
+
+      // Clear existing listeners by initializing a brand new structural instance loop
+      initCarouselEngine(totalSlides);
+    }
+
+    function initCarouselEngine(total) {
+      let currentIdx = 0;
+      
+      function updateSliderDOM(targetIdx) {
+        const slides = document.querySelectorAll('.slide');
+        if(slides.length === 0) return;
+        
+        slides[currentIdx].classList.remove('active');
+        currentIdx = (targetIdx + total) % total;
+        slides[currentIdx].classList.add('active');
+        
+        const dotContainers = document.querySelectorAll('.slide-dots');
+        dotContainers.forEach(container => {
+          container.innerHTML = '';
+          for(let i=0; i<total; i++) {
+            container.innerHTML += `<span class="dot ${i === currentIdx ? 'active' : ''}"></span>`;
+          }
+        });
+
+        document.querySelectorAll('.slide-counter, .s-counter').forEach(el => {
+          el.textContent = `${currentIdx + 1} / ${total}`;
+        });
+      }
+
+      // Safeguard global click pipeline configuration
+      if (!window.carouselListenerConfigured) {
+        document.addEventListener('click', function(e) {
+          const slides = document.querySelectorAll('.slide');
+          const localTotal = slides.length;
+          if(localTotal <= 1) return;
+
+          // Find current active slide index manually
+          let activeIdx = 0;
+          slides.forEach((s, idx) => { if(s.classList.contains('active')) activeIdx = idx; });
+
+          if(e.target.classList.contains('global-next-trigger') || e.target.id === 'nextBtn' || e.target.classList.contains('s-next')) {
+            slides[activeIdx].classList.remove('active');
+            let nextIdx = (activeIdx + 1) % localTotal;
+            slides[nextIdx].classList.add('active');
+            syncCarouselIndicators(nextIdx, localTotal);
+          }
+          if(e.target.classList.contains('global-prev-trigger') || e.target.id === 'prevBtn' || e.target.classList.contains('s-prev')) {
+            slides[activeIdx].classList.remove('active');
+            let prevIdx = (activeIdx - 1 + localTotal) % localTotal;
+            slides[prevIdx].classList.add('active');
+            syncCarouselIndicators(prevIdx, localTotal);
+          }
+        });
+        window.carouselListenerConfigured = true;
+      }
+
+      function syncCarouselIndicators(idx, localTotal) {
+        const dotContainers = document.querySelectorAll('.slide-dots');
+        dotContainers.forEach(container => {
+          container.innerHTML = '';
+          for(let i=0; i<localTotal; i++) {
+            container.innerHTML += `<span class="dot ${i === idx ? 'active' : ''}"></span>`;
+          }
+        });
+        document.querySelectorAll('.slide-counter, .s-counter').forEach(el => {
+          el.textContent = `${idx + 1} / ${localTotal}`;
+        });
+      }
+
+      updateSliderDOM(0);
+    }
+  </script>
+  <script src="scripts.js"></script>
 </body>
 </html>

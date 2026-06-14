@@ -23,7 +23,7 @@
     });
 
     // ── SLIDESHOW ──
-    const track = document.getElementById('slidesTrack');
+    /*const carouselTrack = document.getElementById('slidesTrack');
     const slides = document.querySelectorAll('.slide');
     const total = slides.length;
     let current = 0;
@@ -73,6 +73,7 @@
 
     resetAuto();
     updateUI();
+    */
 
     // Counter animation
     function animateCount(el) {
