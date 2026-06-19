@@ -272,188 +272,181 @@
     </div>
   </footer>
 
-  <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkkzGS8mEcLY0qJiwbIPaNBaRO2hbm0Dz-mVj1d4wJdqrTZWrVLJo9F7xFTNqnbP87Lg/exec'';
-    const track = document.getElementById('slidesTrack');
-    
-    // Master data arrays for multi-year scope management
-    let allEventsCached = [];
-    let activeYearFilter = '2026';
+ <script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1YLQO2w8bwQ8GNweSL10hmGk7LfmsLa-3VW8U76nuwHiRft1mTZz8T8WTAPWBjPbb/exec';
+  const track = document.getElementById('slidesTrack');
+  
+  let allEventsCached = [];
+  let activeYearFilter = '2026';
 
-    function getDirectDriveImageUrl(url) {
-      if (!url) return '';
-      const trimmed = url.trim();
-      if (!trimmed.includes('drive.google.com')) return trimmed;
-      const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9-_]+)/) || trimmed.match(/id=([a-zA-Z0-9-_]+)/);
-      if (match && match[1]) {
-        return `https://drive.google.com/thumbnail?sz=w1200&id=${match[1]}`;
-      }
-      return trimmed;
+  function getDirectDriveImageUrl(url) {
+    if (!url) return '';
+    const trimmed = url.trim();
+    if (!trimmed.includes('drive.google.com')) return trimmed;
+    const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9-_]+)/) || trimmed.match(/id=([a-zA-Z0-9-_]+)/);
+    if (match && match[1]) {
+      return 'https://drive.google.com/thumbnail?sz=w1200&id=' + match[1];
     }
+    return trimmed;
+  }
 
-    // Network ingestion pipeline
-    fetch(SCRIPT_URL)
-      .then(res => res.json())
-      .then(data => {
-        allEventsCached = data || [];
-        // Render the default tab (2026) immediately upon successful download
-        renderFilteredCarousel();
-      })
-      .catch(err => {
-        console.error("Fetch failure:", err);
-        track.innerHTML = `<p style="text-align:center; color:#ff5252; width:100%; padding:40px;">Failed to synchronize live event cards.</p>`;
-      });
-
-    // Filtering handler linked directly to sub-tab button elements
-    function filterEventsByYear(year, buttonElement) {
-      activeYearFilter = year;
-      
-      // Update visual active styling across tab buttons
-      document.querySelectorAll('.year-tab-btn').forEach(btn => btn.classList.remove('active'));
-      buttonElement.classList.add('active');
-      
+  fetch(SCRIPT_URL, {
+    method: 'GET',
+    headers: { 'Accept': 'application/json' }
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Network error: ' + res.status);
+      return res.json();
+    })
+    .then(data => {
+      allEventsCached = data || [];
       renderFilteredCarousel();
+    })
+    .catch(err => {
+      console.error("Connection failure:", err);
+      track.innerHTML = '<p style="text-align:center; color:#ff5252; width:100%; padding:40px; font-family:\'Space Mono\', monospace; font-size:0.9rem;">Database synchronization engine offline.</p>';
+    });
+
+  function filterEventsByYear(year, buttonElement) {
+    activeYearFilter = year;
+    document.querySelectorAll('.year-tab-btn').forEach(btn => btn.classList.remove('active'));
+    buttonElement.classList.add('active');
+    renderFilteredCarousel();
+  }
+
+  function renderFilteredCarousel() {
+    const filteredData = allEventsCached.filter(event => {
+      const eventDateStr = String(event.date || '');
+      return eventDateStr.includes(activeYearFilter);
+    });
+
+    if (filteredData.length === 0) {
+      track.innerHTML = '<p style="text-align:center; color:rgba(255,255,255,0.5); width:100%; padding:60px; font-family:\'Space Mono\', monospace; font-size:0.9rem;">No entries found.</p>';
+      return;
     }
 
-    function renderFilteredCarousel() {
-      // Filter array on the fly based on whether the date string contains '2025' or '2026'
-      const filteredData = allEventsCached.filter(event => {
-        const eventDateStr = String(event.date || '');
-        return eventDateStr.includes(activeYearFilter);
-      });
+    track.innerHTML = '';
+    const totalSlides = filteredData.length;
 
-      if(filteredData.length === 0) {
-        track.innerHTML = `<p style="text-align:center; color:rgba(255,255,255,0.5); width:100%; padding:60px; font-family:'Space Mono', monospace; font-size:0.9rem;">No entries found for the year ${activeYearFilter}.</p>`;
-        return;
+    filteredData.forEach((event, index) => {
+      const slideNum = index + 1;
+      const padIndex = String(slideNum).padStart(2, '0');
+      const padTotal = String(totalSlides).padStart(2, '0');
+      
+      const assetImg = getDirectDriveImageUrl(event.imageurl || event.image);
+      const encodedName = encodeURIComponent(event.name);
+      const encodedCat = encodeURIComponent(event.category);
+
+      let isExpired = false;
+      if (event.deadline) {
+        const deadlineDate = new Date(event.deadline);
+        const currentDate = new Date();
+        if (!isNaN(deadlineDate.getTime()) && currentDate > deadlineDate) {
+          isExpired = true;
+        }
       }
 
-      track.innerHTML = '';
-      const totalSlides = filteredData.length;
+      const actionButtonHTML = isExpired 
+        ? '<button class="register-btn" disabled style="background:rgba(255,255,255,0.05); color:var(--text-muted); border-color:var(--border-soft); cursor:not-allowed; transform:none; box-shadow:none;">Closed</button>'
+        : '<button class="register-btn" onclick="window.location.href=\'register.html?name=' + encodedName + '&cat=' + encodedCat + '\'">Register</button>';
 
-      filteredData.forEach((event, index) => {
-        const slideNum = index + 1;
-        const padIndex = String(slideNum).padStart(2, '0');
-        const padTotal = String(totalSlides).padStart(2, '0');
-        
-        const assetImg = getDirectDriveImageUrl(event.imageurl || event.image);
-        const encodedName = encodeURIComponent(event.name);
-        const encodedCat = encodeURIComponent(event.category);
-
-        // Real-time date boundary checking loop logic
-        let isExpired = false;
-        if (event.deadline) {
-          const deadlineDate = new Date(event.deadline);
-          const currentDate = new Date();
-          if (!isNaN(deadlineDate.getTime()) && currentDate > deadlineDate) {
-            isExpired = true;
-          }
-        }
-
-        const actionButtonHTML = isExpired 
-          ? `<button class="register-btn" disabled style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-color: var(--border-soft); cursor: not-allowed; transform: none; box-shadow: none;">Closed</button>`
-          : `<button class="register-btn" onclick="window.location.href='register.html?name=${encodedName}&cat=${encodedCat}'">Register</button>`;
-
-        const slideHTML = `
-          <div class="slide ${index === 0 ? 'active' : ''}" data-slide-idx="${index}">
-            <div class="slide-img-wrap">
-              <img class="slide-img" src="${assetImg}" alt="${event.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-              <div class="slide-placeholder" style="display:none; width:100%; height:100%; background:var(--bg-3); align-items:center; justify-content:center; font-size:4rem;">🌌</div>
+      const slideHTML = `
+        <div class="slide ${index === 0 ? 'active' : ''}" data-slide-idx="${index}">
+          <div class="slide-img-wrap">
+            <img class="slide-img" src="${assetImg}" alt="${event.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-placeholder" style="display:none; width:100%; height:100%; background:var(--bg-3); align-items:center; justify-content:center; font-size:4rem;">🌌</div>
+          </div>
+          <div class="slide-content">
+            <div class="slide-index">${padIndex} / ${padTotal}</div>
+            <div class="slide-cat">${event.category}</div>
+            <div class="slide-name">${event.name}</div>
+            <div class="slide-desc">
+              ${event.description}
+              <br><br>
+              <span style="color:var(--lavender); font-family:\'Space Mono\', monospace; font-size:0.8rem; display:block; margin-bottom:5px;">
+                📅 Date: ${event.date} | 🪙 Cost: ${event.price}
+              </span>
             </div>
-            <div class="slide-content">
-              <div class="slide-index">${padIndex} / ${padTotal}</div>
-              <div class="slide-cat">${event.category}</div>
-              <div class="slide-name">${event.name}</div>
-              <div class="slide-desc">
-                ${event.description}
-                <br><br>
-                <span style="color: var(--lavender); font-family: 'Space Mono', monospace; font-size: 0.8rem; display: block; margin-bottom: 5px;">
-                  📅 Date: ${event.date} | 🪙 Cost: ${event.price}
-                </span>
-              </div>
-              <div class="slide-controls">
-                <button class="slide-btn global-prev-trigger" id="prevBtn" aria-label="Previous">&#8592;</button>
-                <button class="slide-btn global-next-trigger" id="nextBtn" aria-label="Next">&#8594;</button>
-                <div class="slide-dots"></div>
-                <span class="slide-counter">${slideNum} / ${totalSlides}</span>
-                ${actionButtonHTML}
-              </div>
+            <div class="slide-controls">
+              <button class="slide-btn global-prev-trigger" id="prevBtn" aria-label="Previous">&lt;</button>
+              <button class="slide-btn global-next-trigger" id="nextBtn" aria-label="Next">&gt;</button>
+              <div class="slide-dots"></div>
+              <span class="slide-counter">${slideNum} / ${totalSlides}</span>
+              ${actionButtonHTML}
             </div>
           </div>
-        `;
-        track.innerHTML += slideHTML;
+        </div>
+      `;
+      track.innerHTML += slideHTML;
+    });
+
+    initCarouselEngine(totalSlides);
+  }
+
+  function initCarouselEngine(total) {
+    let currentIdx = 0;
+    
+    function updateSliderDOM(targetIdx) {
+      const slides = document.querySelectorAll('.slide');
+      if (slides.length === 0) return;
+      
+      slides[currentIdx].classList.remove('active');
+      currentIdx = (targetIdx + total) % total;
+      slides[currentIdx].classList.add('active');
+      
+      const dotContainers = document.querySelectorAll('.slide-dots');
+      dotContainers.forEach(container => {
+        container.innerHTML = '';
+        for (let i = 0; i < total; i++) {
+          container.innerHTML += '<span class="dot ' + (i === currentIdx ? 'active' : '') + '"></span>';
+        }
       });
 
-      // Clear existing listeners by initializing a brand new structural instance loop
-      initCarouselEngine(totalSlides);
+      document.querySelectorAll('.slide-counter, .s-counter').forEach(el => {
+        el.textContent = (currentIdx + 1) + ' / ' + total;
+      });
     }
 
-    function initCarouselEngine(total) {
-      let currentIdx = 0;
-      
-      function updateSliderDOM(targetIdx) {
+    if (!window.carouselListenerConfigured) {
+      document.addEventListener('click', function(e) {
         const slides = document.querySelectorAll('.slide');
-        if(slides.length === 0) return;
-        
-        slides[currentIdx].classList.remove('active');
-        currentIdx = (targetIdx + total) % total;
-        slides[currentIdx].classList.add('active');
-        
-        const dotContainers = document.querySelectorAll('.slide-dots');
-        dotContainers.forEach(container => {
-          container.innerHTML = '';
-          for(let i=0; i<total; i++) {
-            container.innerHTML += `<span class="dot ${i === currentIdx ? 'active' : ''}"></span>`;
-          }
-        });
+        const localTotal = slides.length;
+        if (localTotal <= 1) return;
 
-        document.querySelectorAll('.slide-counter, .s-counter').forEach(el => {
-          el.textContent = `${currentIdx + 1} / ${total}`;
-        });
-      }
+        let activeIdx = 0;
+        slides.forEach((s, idx) => { if (s.classList.contains('active')) activeIdx = idx; });
 
-      // Safeguard global click pipeline configuration
-      if (!window.carouselListenerConfigured) {
-        document.addEventListener('click', function(e) {
-          const slides = document.querySelectorAll('.slide');
-          const localTotal = slides.length;
-          if(localTotal <= 1) return;
-
-          // Find current active slide index manually
-          let activeIdx = 0;
-          slides.forEach((s, idx) => { if(s.classList.contains('active')) activeIdx = idx; });
-
-          if(e.target.classList.contains('global-next-trigger') || e.target.id === 'nextBtn' || e.target.classList.contains('s-next')) {
-            slides[activeIdx].classList.remove('active');
-            let nextIdx = (activeIdx + 1) % localTotal;
-            slides[nextIdx].classList.add('active');
-            syncCarouselIndicators(nextIdx, localTotal);
-          }
-          if(e.target.classList.contains('global-prev-trigger') || e.target.id === 'prevBtn' || e.target.classList.contains('s-prev')) {
-            slides[activeIdx].classList.remove('active');
-            let prevIdx = (activeIdx - 1 + localTotal) % localTotal;
-            slides[prevIdx].classList.add('active');
-            syncCarouselIndicators(prevIdx, localTotal);
-          }
-        });
-        window.carouselListenerConfigured = true;
-      }
-
-      function syncCarouselIndicators(idx, localTotal) {
-        const dotContainers = document.querySelectorAll('.slide-dots');
-        dotContainers.forEach(container => {
-          container.innerHTML = '';
-          for(let i=0; i<localTotal; i++) {
-            container.innerHTML += `<span class="dot ${i === idx ? 'active' : ''}"></span>`;
-          }
-        });
-        document.querySelectorAll('.slide-counter, .s-counter').forEach(el => {
-          el.textContent = `${idx + 1} / ${localTotal}`;
-        });
-      }
-
-      updateSliderDOM(0);
+        if (e.target.classList.contains('global-next-trigger') || e.target.id === 'nextBtn') {
+          slides[activeIdx].classList.remove('active');
+          let nextIdx = (activeIdx + 1) % localTotal;
+          slides[nextIdx].classList.add('active');
+          syncCarouselIndicators(nextIdx, localTotal);
+        }
+        if (e.target.classList.contains('global-prev-trigger') || e.target.id === 'prevBtn') {
+          slides[activeIdx].classList.remove('active');
+          let prevIdx = (activeIdx - 1 + localTotal) % localTotal;
+          slides[prevIdx].classList.add('active');
+          syncCarouselIndicators(prevIdx, localTotal);
+        }
+      });
+      window.carouselListenerConfigured = true;
     }
-  </script>
-  <script src="scripts.js"></script>
+
+    function syncCarouselIndicators(idx, localTotal) {
+      const dotContainers = document.querySelectorAll('.slide-dots');
+      dotContainers.forEach(container => {
+        container.innerHTML = '';
+        for (let i = 0; i < localTotal; i++) {
+          container.innerHTML += '<span class="dot ' + (i === idx ? 'active' : '') + '"></span>';
+        }
+      });
+      document.querySelectorAll('.slide-counter, .s-counter').forEach(el => {
+        el.textContent = (idx + 1) + ' / ' + localTotal;
+      });
+    }
+
+    updateSliderDOM(0);
+  }
+</script>  <script src="scripts.js"></script>
 </body>
 </html>
