@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
 /* ── INTEREST GROUP COMPACT ACCENTS ── */
 
 /* Web Development - Cyber Cyan */
@@ -106,8 +108,6 @@
   border-color: #7b2ff7;
   box-shadow: 0 0 15px rgba(123, 47, 247, 0.35);
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
    
 :root {
   --purple-deep: #2d0057;
@@ -417,8 +417,7 @@ nav {
 }
 .pillar::before {
   content: '';
-  position: absolute;
-  top: 0; left: 0; width: 3px; height: 100%;
+  position: absolute; top: 0; left: 0; width: 3px; height: 100%;
   background: linear-gradient(180deg, var(--purple-mid), var(--lavender));
   transform: scaleY(0); transform-origin: top;
   transition: transform 0.35s cubic-bezier(.23,1,.32,1);
@@ -808,7 +807,26 @@ footer {
   #home { padding: 120px 20px 80px; }
   footer { flex-direction: column; gap: 12px; padding: 28px 20px; }
   .footer-copy { text-align: center; }
+
+  /* ── SLIDER BUTTON VISIBILITY ON MOBILE ── */
+  .slide-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .register-btn {
+    width: 100%;
+    margin-left: 0 !important;
+    margin-top: 8px;
+    padding: 12px 20px;
+    text-align: center;
+  }
 }
+
 @media (max-width: 500px) {
   .stats-grid { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
