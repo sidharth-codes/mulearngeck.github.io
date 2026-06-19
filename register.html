@@ -71,38 +71,49 @@
   </div>
   
 
-  <script>
+ <script>
     const urlParams = new URLSearchParams(window.location.search);
     const eventName = urlParams.get('name') || "Event";
-    const eventCategory = urlParams.get('cat') || "Tech"; 
+    const eventCategory = urlParams.get('cat') || "Tech";
 
     document.getElementById('form-title').innerText = `Register for ${eventName}`;
     document.getElementById('eventName').value = eventName;
     document.getElementById('eventCategory').value = eventCategory;
 
-    const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz1YLQO2w8bwQ8GNweSL10hmGk7LfmsLa-3VW8U76nuwHiRft1mTZz8T8WTAPWBjPbb/exec'; 
+    // FIXED: Pointing to the active operational script ID matching index.html
+    const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxkkzGS8mEcLY0qJiwbIPaNBaRO2hbm0Dz-mVj1d4wJdqrTZWrVLJo9F7xFTNqnbP87Lg/exec'; 
     
     const form = document.getElementById('studentRegisterForm');
     const submitBtn = document.getElementById('submitBtn');
     const toast = document.getElementById('successToast');
 
     form.addEventListener('submit', event => {
-      event.preventDefault(); 
+      event.preventDefault();
       
       submitBtn.disabled = true;
       submitBtn.innerText = "Processing submission...";
 
-      fetch(BACKEND_URL, { method: 'POST', body: new FormData(form) })
-        .then(res => {
-          submitBtn.innerText = "Submitted Successfully!";
-          toast.style.display = "block";
-          form.reset(); 
-        })
-        .catch(err => {
-          console.error("Error logging submission:", err.message);
-          submitBtn.disabled = false;
-          submitBtn.innerText = "Retry Submission";
-        });
+      const encodedPayload = new URLSearchParams(new FormData(form));
+
+      fetch(BACKEND_URL, { 
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodedPayload 
+      })
+      .then(res => {
+        submitBtn.innerText = "Submitted Successfully!";
+        toast.style.display = "block";
+        form.reset();
+        
+        document.getElementById('eventName').value = eventName;
+        document.getElementById('eventCategory').value = eventCategory;
+      })
+      .catch(err => {
+        console.error("Error logging submission:", err.message);
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Retry Submission";
+      });
     });
   </script>
 <!-- Sidharth P. Signature Widget - Interactive Circle Capsule -->
